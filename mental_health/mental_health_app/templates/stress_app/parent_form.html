@@ -1,0 +1,10 @@
+<!-- stress_app/templates/stress_app/parent_form.html -->
+{% extends 'stress_app/base.html' %}
+{% block content %}
+<h4>Parent's View of Child's Mental Health</h4>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-warning">Submit</button>
+</form>
+{% endblock %}

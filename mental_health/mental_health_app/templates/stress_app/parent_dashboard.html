@@ -1,0 +1,10 @@
+<!-- stress_app/templates/stress_app/parent_dashboard.html -->
+{% extends 'stress_app/base.html' %}
+{% block content %}
+<h4>Parent Dashboard</h4>
+<ul class="list-group">
+    <li class="list-group-item"><a href="{% url 'parent_form' %}">Fill Stress Form</a></li>
+    <li class="list-group-item"><a href="#">View Child Progress (Coming Soon)</a></li>
+    <li class="list-group-item"><a href="{% url 'logout' %}">Logout</a></li>
+</ul>
+{% endblock %}

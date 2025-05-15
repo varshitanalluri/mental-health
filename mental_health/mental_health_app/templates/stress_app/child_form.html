@@ -1,0 +1,10 @@
+<!-- stress_app/templates/stress_app/child_form.html -->
+{% extends 'stress_app/base.html' %}
+{% block content %}
+<h4>Child Stress Assessment</h4>
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-info">Submit</button>
+</form>
+{% endblock %}

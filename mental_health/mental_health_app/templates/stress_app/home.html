@@ -1,0 +1,9 @@
+{% extends "stress_app/base.html" %}
+
+{% block content %}
+<div class="text-center">
+  <h3>Welcome to Mental Health Well-being System</h3>
+  <a href="{% url 'login' %}" class="btn btn-primary m-2">Login</a>
+  <a href="{% url 'parent_register' %}" class="btn btn-success m-2">Sign Up (Parent)</a>
+</div>
+{% endblock %}
