@@ -9,3 +9,8 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f'{self.user.username} - {self.role}'
+
+class StressResult(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    stress_level = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
