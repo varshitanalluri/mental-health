@@ -11,5 +11,5 @@ urlpatterns = [
     path('child-form/', views.child_form_view, name='child_form'),
     path('dashboard/', views.dashboard, name='dashboard'),
     path('login-redirect/', views.login_redirect, name='login_redirect'),
-    path('about/', views.about_view, name='about'),  # ✅ this line added
+    path('about/', views.about_view, name='about'),  
 ]
