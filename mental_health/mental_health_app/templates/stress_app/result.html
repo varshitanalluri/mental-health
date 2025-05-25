@@ -1,8 +1,0 @@
-<!-- stress_app/templates/stress_app/result.html -->
-{% extends 'stress_app/base.html' %}
-{% block content %}
-<h4>Prediction Results</h4>
-<p><strong>Child Stress Level:</strong> {{ child_stress }}</p>
-<p><strong>Parent Stress Level:</strong> {{ parent_stress }}</p>
-<a href="{% url 'login' %}" class="btn btn-secondary mt-3">Back to Login</a>
-{% endblock %}
