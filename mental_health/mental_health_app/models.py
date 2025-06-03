@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.db import models
+from django.contrib.auth.models import User
+
 class UserProfile(models.Model):
     ROLE_CHOICES = [('parent', 'Parent'), ('child', 'Child')]
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -12,8 +15,9 @@ class UserProfile(models.Model):
 
 class StressResult(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    stress_level = models.IntegerField()
+    stress_level = models.CharField(max_length=20) 
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class ESP32Data(models.Model):
     heart_rate = models.IntegerField()
