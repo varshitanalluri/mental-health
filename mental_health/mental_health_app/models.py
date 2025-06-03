@@ -12,6 +12,16 @@ class UserProfile(models.Model):
 
 class StressResult(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    stress_level = models.CharField(max_length=20) 
+    stress_level = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
+class ESP32Data(models.Model):
+    heart_rate = models.IntegerField()
+    spo2 = models.IntegerField()
+    steps = models.IntegerField()
+    temperature = models.FloatField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"HR: {self.heart_rate}, SpO2: {self.spo2}, Temp: {self.temperature}"
+    

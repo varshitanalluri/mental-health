@@ -13,39 +13,8 @@
 
   <section class="mb-8">
     <h3 class="text-xl font-semibold mb-3">Your Stress Assessment Result</h3>
-
     {% if own_result %}
-      {% with level=own_result.stress_level %}
-        <p>Your stress level: 
-          <strong class="
-            {% if level == 'Very Low' or level == 'Low' %}text-green-600
-            {% elif level == 'Moderate' %}text-yellow-600
-            {% elif level == 'High' %}text-orange-600
-            {% elif level == 'Severe' %}text-red-600
-            {% endif %}
-          ">
-            {{ level }}
-          </strong>
-        </p>
-        {% if own_result.updated_at %}
-          <p class="text-sm text-gray-500 mt-1">
-            Submitted on: {{ own_result.updated_at|date:"F j, Y, g:i a" }}
-          </p>
-        {% endif %}
-
-        {% if prescription_msg %}
-          <div class="mt-4 p-4 bg-blue-100 text-blue-800 rounded">
-            {{ prescription_msg }}
-          </div>
-        {% endif %}
-
-        {% if level == 'High' or level == 'Severe' %}
-          <div class="mt-4 p-4 bg-red-100 text-red-800 rounded">
-            You may be experiencing high stress. Please consider reaching out for help or talking to someone you trust.
-          </div>
-        {% endif %}
-      {% endwith %}
-
+      <p>Your stress level: <strong>{{ own_result.stress_level }}</strong></p>
       <p class="mt-4">
         {% if role == 'parent' %}
           <a href="{% url 'parent_form' %}" class="btn-primary">Fill Parent Stress Form Again</a>
@@ -73,26 +42,13 @@
       {% endif %}
       Stress Results
     </h3>
-
     {% if linked_results %}
       <ul>
         {% for res in linked_results %}
           <li class="mb-2">
             <strong>{{ res.user }} ({{ res.role }})</strong>:
             {% if res.stress_level %}
-              Stress level: 
-              <em class="
-                {% if res.stress_level == 'Very Low' or res.stress_level == 'Low' %}text-green-600
-                {% elif res.stress_level == 'Moderate' %}text-yellow-600
-                {% elif res.stress_level == 'High' %}text-orange-600
-                {% elif res.stress_level == 'Severe' %}text-red-600
-                {% endif %}
-              ">
-                {{ res.stress_level }}
-              </em>
-              {% if res.updated_at %}
-                <span class="text-sm text-gray-500"> ({{ res.updated_at|date:"M d, Y" }})</span>
-              {% endif %}
+              Stress level: <em>{{ res.stress_level }}</em>
             {% else %}
               Not submitted yet.
               {% if res.role == 'Child' %}

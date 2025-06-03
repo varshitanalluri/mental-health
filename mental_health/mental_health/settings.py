@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-mv$@(&e-^juzq1o54$%s@kn3#3(^$+fsp^y_5w*zcz5*d3(3%-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.1.108', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mental_health_app',
     'widget_tweaks',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

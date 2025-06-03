@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
 
+
 urlpatterns = [
     path('', views.home, name='home'),
     path('register/', views.parent_register, name='parent_register'),
@@ -12,4 +13,5 @@ urlpatterns = [
     path('dashboard/', views.dashboard, name='dashboard'),
     path('login-redirect/', views.login_redirect, name='login_redirect'),
     path('about/', views.about_view, name='about'),  
+    path('api/esp32/', views.esp32_data, name='esp32_data'),
 ]
