@@ -1,0 +1,37 @@
+{% extends 'stress_app/base.html' %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-cyan-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-2xl transition duration-500 ease-in-out transform hover:-translate-y-1 hover:shadow-2xl">
+        
+        <div class="text-center mb-8">
+            <h2 class="text-3xl font-extrabold text-cyan-800">Child Stress Assessment</h2>
+            <p class="mt-2 text-sm text-gray-600">
+                Please answer each question based on how you've been feeling recently.
+            </p>
+        </div>
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+
+            <div class="space-y-4">
+                {% for field in form %}
+                <div class="bg-gray-50 p-4 rounded-md shadow-sm hover:bg-gray-100 transition duration-200">
+                    <label class="block text-gray-700 font-medium mb-2">{{ field.label }}</label>
+                    <div class="ml-4 space-y-2">
+                        {{ field }}
+                        {% if field.errors %}
+                            <p class="text-red-500 text-sm mt-1">{{ field.errors|striptags }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="mt-6 w-full bg-cyan-600 hover:bg-cyan-700 text-white py-3 px-6 rounded-xl font-semibold text-lg transition duration-300">
+                Submit Assessment
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
