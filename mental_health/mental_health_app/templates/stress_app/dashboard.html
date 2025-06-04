@@ -17,7 +17,7 @@
 
     {% if own_result %}
       {% with level=own_result.stress_level %}
-        <p>Your stress level: 
+        <p>Your stress level:
           <strong class="
             {% if level == 'Very Low' or level == 'Low' %}text-green-600
             {% elif level == 'Moderate' %}text-yellow-600
@@ -28,6 +28,7 @@
             {{ level }}
           </strong>
         </p>
+
         {% if own_result.updated_at %}
           <p class="text-sm text-gray-500 mt-1">
             Submitted on: {{ own_result.updated_at|date:"F j, Y, g:i a" }}
@@ -48,69 +49,50 @@
       {% endwith %}
 
       <p class="mt-4">
-        {% if role == 'parent' %}
-          <a href="{% url 'parent_form' %}" class="btn-primary">Fill Parent Stress Form Again</a>
-        {% elif role == 'child' %}
-          <a href="{% url 'child_form' %}" class="btn-primary">Fill Child Stress Form Again</a>
-        {% endif %}
+        <a href="{% url role|add:'_form' %}" class="btn-primary">Fill {{ role|title }} Stress Form Again</a>
       </p>
     {% else %}
       <p>You have not submitted your stress form yet.</p>
-      {% if role == 'parent' %}
-        <a href="{% url 'parent_form' %}" class="btn-primary">Fill Parent Stress Form</a>
-      {% elif role == 'child' %}
-        <a href="{% url 'child_form' %}" class="btn-primary">Fill Child Stress Form</a>
-      {% endif %}
+      <a href="{% url role|add:'_form' %}" class="btn-primary">Fill {{ role|title }} Stress Form</a>
     {% endif %}
   </section>
 
-  <section>
-    <h3 class="text-xl font-semibold mb-3">
-      Linked
-      {% if role == 'parent' %}
-        Children
-      {% else %}
-        Parent
-      {% endif %}
-      Stress Results
-    </h3>
+  {% if role == 'parent' %}
+    <section>
+      <h3 class="text-xl font-semibold mb-3">Linked Children Stress Results</h3>
 
-    {% if linked_results %}
-      <ul>
-        {% for res in linked_results %}
-          <li class="mb-2">
-            <strong>{{ res.user }} ({{ res.role }})</strong>:
-            {% if res.stress_level %}
-              Stress level: 
-              <em class="
-                {% if res.stress_level == 'Very Low' or res.stress_level == 'Low' %}text-green-600
-                {% elif res.stress_level == 'Moderate' %}text-yellow-600
-                {% elif res.stress_level == 'High' %}text-orange-600
-                {% elif res.stress_level == 'Severe' %}text-red-600
+      {% if linked_results %}
+        <ul>
+          {% for res in linked_results %}
+            <li class="mb-2">
+              <strong>{{ res.user }} ({{ res.role }})</strong>:
+              {% if res.stress_level %}
+                Stress level:
+                <em class="
+                  {% if res.stress_level == 'Very Low' or res.stress_level == 'Low' %}text-green-600
+                  {% elif res.stress_level == 'Moderate' %}text-yellow-600
+                  {% elif res.stress_level == 'High' %}text-orange-600
+                  {% elif res.stress_level == 'Severe' %}text-red-600
+                  {% endif %}
+                ">
+                  {{ res.stress_level }}
+                </em>
+                {% if res.updated_at %}
+                  <span class="text-sm text-gray-500"> ({{ res.updated_at|date:"M d, Y" }})</span>
                 {% endif %}
-              ">
-                {{ res.stress_level }}
-              </em>
-              {% if res.updated_at %}
-                <span class="text-sm text-gray-500"> ({{ res.updated_at|date:"M d, Y" }})</span>
-              {% endif %}
-            {% else %}
-              Not submitted yet.
-              {% if res.role == 'Child' %}
+              {% else %}
+                Not submitted yet.
                 <br>
                 Ask your child to <a href="{% url 'login' %}" class="text-blue-600 hover:underline">log in</a> and fill the <a href="{% url 'child_form' %}" class="text-blue-600 hover:underline">Child Stress Form</a>.
-              {% elif res.role == 'Parent' %}
-                <br>
-                Ask your parent to <a href="{% url 'login' %}" class="text-blue-600 hover:underline">log in</a> and fill the <a href="{% url 'parent_form' %}" class="text-blue-600 hover:underline">Parent Stress Form</a>.
               {% endif %}
-            {% endif %}
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p>No linked users found.</p>
-    {% endif %}
-  </section>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>No linked children found.</p>
+      {% endif %}
+    </section>
+  {% endif %}
 
 </div>
 {% endblock %}

@@ -131,15 +131,18 @@ PRESCRIPTIONS = {
 def dashboard(request):
     profile = request.user.userprofile
     own_result = None
-    prescription_msg = None 
+    prescription_msg = None
     linked_results = []
+
     try:
         own_result = StressResult.objects.get(user=request.user)
         prescription_msg = PRESCRIPTIONS.get((profile.role, own_result.stress_level), "No advice available.")
     except StressResult.DoesNotExist:
         own_result = None
         prescription_msg = None
+
     if profile.role == 'parent':
+        # Parent sees their own result + linked children results
         children = UserProfile.objects.filter(linked_parent=request.user, role='child')
         for child_profile in children:
             try:
@@ -157,28 +160,11 @@ def dashboard(request):
                     'stress_level': None,
                     'updated_at': None
                 })
-    elif profile.role == 'child':
-        parent_profile = profile.linked_parent.userprofile if profile.linked_parent else None
-        if parent_profile:
-            try:
-                res = StressResult.objects.get(user=profile.linked_parent)
-                linked_results.append({
-                    'user': profile.linked_parent.username,
-                    'role': 'Parent',
-                    'stress_level': res.stress_level,
-                    'updated_at': res.updated_at
-                })
-            except StressResult.DoesNotExist:
-                linked_results.append({
-                    'user': profile.linked_parent.username,
-                    'role': 'Parent',
-                    'stress_level': None,
-                    'updated_at': None
-                })
+
     return render(request, 'stress_app/dashboard.html', {
         'own_result': own_result,
         'prescription_msg': prescription_msg,
-        'linked_results': linked_results,
+        'linked_results': linked_results if profile.role == 'parent' else None,
         'role': profile.role,
     })
 
@@ -195,39 +181,5 @@ def fitness_watch_view(request):
         'role': request.user.userprofile.role
     })
 
-
-@login_required
-def dashboard(request):
-    profile = request.user.userprofile
-    own_result = None
-    linked_results = []
-
-    try:
-        own_result = StressResult.objects.get(user=request.user)
-    except StressResult.DoesNotExist:
-        own_result = None
-
-    if profile.role == 'parent':
-        children = UserProfile.objects.filter(linked_parent=request.user, role='child')
-        for child_profile in children:
-            try:
-                res = StressResult.objects.get(user=child_profile.user)
-                linked_results.append({'user': child_profile.user.username, 'role': 'Child', 'stress_level': res.stress_level})
-            except StressResult.DoesNotExist:
-                linked_results.append({'user': child_profile.user.username, 'role': 'Child', 'stress_level': None})
-    elif profile.role == 'child':
-        parent_profile = profile.linked_parent.userprofile if profile.linked_parent else None
-        if parent_profile:
-            try:
-                res = StressResult.objects.get(user=profile.linked_parent)
-                linked_results.append({'user': profile.linked_parent.username, 'role': 'Parent', 'stress_level': res.stress_level})
-            except StressResult.DoesNotExist:
-                linked_results.append({'user': profile.linked_parent.username, 'role': 'Parent', 'stress_level': None})
-
-    return render(request, 'stress_app/dashboard.html', {
-        'own_result': own_result,
-        'linked_results': linked_results,
-        'role': profile.role,
-    })
 def about_view(request):
     return render(request, 'stress_app/about.html')
