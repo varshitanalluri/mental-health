@@ -39,7 +39,22 @@ def esp32_data(request):
         except Exception as e:
             return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
     return JsonResponse({'status': 'error', 'message': 'Only POST allowed'}, status=405)
-
+def latest_esp32_data(request):
+    if request.method == 'GET':
+        latest_entries = ESP32Data.objects.order_by('-timestamp')[:10]
+        data = [
+            {
+                "timestamp": entry.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
+                "heart_rate": entry.heart_rate,
+                "spo2": entry.spo2,
+                "steps": entry.steps,
+                "temperature": entry.temperature,
+            }
+            for entry in latest_entries
+        ]
+        return JsonResponse({"entries": data})
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Only GET allowed'}, status=405)
 def home(request):
     return render(request, 'stress_app/home.html')
 
@@ -167,5 +182,52 @@ def dashboard(request):
         'role': profile.role,
     })
 
+@login_required
+def login_redirect(request):
+    return redirect('dashboard')
+
+@login_required
+def fitness_watch_view(request):
+    # Get the most recent 10 entries or modify as needed
+    esp32_data_entries = ESP32Data.objects.all().order_by('-timestamp')[:10]
+    return render(request, 'stress_app/fitness_watch.html', {
+        'esp32_data_entries': esp32_data_entries,
+        'role': request.user.userprofile.role
+    })
+
+
+@login_required
+def dashboard(request):
+    profile = request.user.userprofile
+    own_result = None
+    linked_results = []
+
+    try:
+        own_result = StressResult.objects.get(user=request.user)
+    except StressResult.DoesNotExist:
+        own_result = None
+
+    if profile.role == 'parent':
+        children = UserProfile.objects.filter(linked_parent=request.user, role='child')
+        for child_profile in children:
+            try:
+                res = StressResult.objects.get(user=child_profile.user)
+                linked_results.append({'user': child_profile.user.username, 'role': 'Child', 'stress_level': res.stress_level})
+            except StressResult.DoesNotExist:
+                linked_results.append({'user': child_profile.user.username, 'role': 'Child', 'stress_level': None})
+    elif profile.role == 'child':
+        parent_profile = profile.linked_parent.userprofile if profile.linked_parent else None
+        if parent_profile:
+            try:
+                res = StressResult.objects.get(user=profile.linked_parent)
+                linked_results.append({'user': profile.linked_parent.username, 'role': 'Parent', 'stress_level': res.stress_level})
+            except StressResult.DoesNotExist:
+                linked_results.append({'user': profile.linked_parent.username, 'role': 'Parent', 'stress_level': None})
+
+    return render(request, 'stress_app/dashboard.html', {
+        'own_result': own_result,
+        'linked_results': linked_results,
+        'role': profile.role,
+    })
 def about_view(request):
     return render(request, 'stress_app/about.html')

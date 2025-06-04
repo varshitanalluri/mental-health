@@ -1,3 +1,4 @@
+
 from django.urls import path
 from . import views
 from django.contrib.auth import views as auth_views
@@ -14,4 +15,6 @@ urlpatterns = [
     path('login-redirect/', views.login_redirect, name='login_redirect'),
     path('about/', views.about_view, name='about'),  
     path('api/esp32/', views.esp32_data, name='esp32_data'),
+    path('fitness-watch/', views.fitness_watch_view, name='fitness_watch'),
+    path('api/esp32/latest/', views.latest_esp32_data, name='latest_esp32_data'),
 ]
